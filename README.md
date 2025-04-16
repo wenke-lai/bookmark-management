@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 書籤管理工具
 
-## Getting Started
+一個使用 Next.js 和 Shadcn 建構的現代化、響應式網頁應用程式，用於高效管理網頁書籤。
 
-First, run the development server:
+## 功能特色
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- ✨ 新增、編輯和刪除書籤，包含標題、網址、描述和標籤
+- 📤 從瀏覽器匯出的 HTML 檔案匯入書籤
+- 📥 將書籤匯出為標準 HTML 格式
+- 🏷️ 基於標籤的組織方式，使書籤管理更輕鬆
+- 🌓 支援淺色和深色模式
+- 💾 自動儲存至本機儲存空間
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 技術架構
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+本專案使用 Next.js 15 作為框架，搭配 Tailwind CSS 4 進行樣式設計，並整合了多種現代化工具及函式庫，如 React Hook Form、Zod、Framer Motion 等，提供流暢且直覺的使用者體驗。
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 使用方法
 
-## Learn More
+### 新增書籤
 
-To learn more about Next.js, take a look at the following resources:
+1. 填寫書籤詳細資訊（標題、網址、選填的描述和標籤）
+2. 點擊「新增書籤」進行儲存
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 匯入書籤
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. 前往「匯入」分頁
+2. 拖放 HTML 書籤檔案或點擊選擇檔案
+3. 應用程式將解析檔案並將所有書籤新增至您的收藏
 
-## Deploy on Vercel
+### 匯出書籤
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. 點擊「匯出書籤」按鈕
+2. 應用程式將產生包含所有書籤的 HTML 檔案
+3. 將檔案儲存至您的電腦
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 管理書籤
+
+- 點擊「編輯」按鈕編輯書籤
+- 點擊「刪除」按鈕刪除書籤
+- 在主畫面查看所有書籤
+
+## 儲存方式
+
+所有書籤都儲存在您瀏覽器的 localStorage 中，這意味著：
+
+- 您的書籤會在不同瀏覽階段間保留
+- 您的資料不會離開您的裝置
+- 清除瀏覽器資料將移除您的書籤
+
+## 隱私考量
+
+由於本應用程式使用本機儲存方式，您的書籤資料完全保留在您的裝置上，不會上傳至任何伺服器。這確保了您的瀏覽習慣和收藏網站的隱私安全。
