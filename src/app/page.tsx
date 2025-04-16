@@ -1,6 +1,12 @@
 "use client";
 
 import { Header } from "@/components/header";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 
 interface Bookmark {
@@ -64,121 +70,119 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-white dark:bg-gray-900">
+    <main className="min-h-screen bg-background">
       <Header />
       <div className="container mx-auto px-4 py-8">
-        <form onSubmit={handleSubmit} className="mb-8 space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Title</label>
-            <input
-              type="text"
-              value={formData.title}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
-              required
-              className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-700"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">URL</label>
-            <input
-              type="url"
-              value={formData.url}
-              onChange={(e) =>
-                setFormData({ ...formData, url: e.target.value })
-              }
-              required
-              className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-700"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Description
-            </label>
-            <textarea
-              value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-              className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-700"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Tags (comma separated)
-            </label>
-            <input
-              type="text"
-              value={formData.tags?.join(", ")}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  tags: e.target.value.split(",").map((tag) => tag.trim()),
-                })
-              }
-              className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-700"
-            />
-          </div>
-          <button
-            type="submit"
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            {editingId ? "Update Bookmark" : "Add Bookmark"}
-          </button>
-        </form>
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>
+              {editingId ? "Edit Bookmark" : "Add New Bookmark"}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="title">Title</Label>
+                <Input
+                  id="title"
+                  value={formData.title}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="url">URL</Label>
+                <Input
+                  id="url"
+                  type="url"
+                  value={formData.url}
+                  onChange={(e) =>
+                    setFormData({ ...formData, url: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="tags">Tags (comma separated)</Label>
+                <Input
+                  id="tags"
+                  value={formData.tags?.join(", ")}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      tags: e.target.value.split(",").map((tag) => tag.trim()),
+                    })
+                  }
+                />
+              </div>
+              <Button type="submit">
+                {editingId ? "Update Bookmark" : "Add Bookmark"}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
 
         <div className="space-y-4">
           {bookmarks.map((bookmark) => (
-            <div
-              key={bookmark.id}
-              className="p-4 border rounded dark:border-gray-700"
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="text-lg font-semibold">{bookmark.title}</h3>
-                  <a
-                    href={bookmark.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline"
-                  >
-                    {bookmark.url}
-                  </a>
-                  {bookmark.description && (
-                    <p className="mt-1 text-gray-600 dark:text-gray-300">
-                      {bookmark.description}
-                    </p>
-                  )}
-                  {bookmark.tags && bookmark.tags.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {bookmark.tags.map((tag, index) => (
-                        <span
-                          key={index}
-                          className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded text-sm"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+            <Card key={bookmark.id}>
+              <CardContent className="pt-6">
+                <div className="flex justify-between items-start">
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-semibold">{bookmark.title}</h3>
+                    <a
+                      href={bookmark.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      {bookmark.url}
+                    </a>
+                    {bookmark.description && (
+                      <p className="text-muted-foreground">
+                        {bookmark.description}
+                      </p>
+                    )}
+                    {bookmark.tags && bookmark.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {bookmark.tags.map((tag, index) => (
+                          <Badge key={index} variant="secondary">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEdit(bookmark)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDelete(bookmark.id)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleEdit(bookmark)}
-                    className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-800 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(bookmark.id)}
-                    className="px-3 py-1 text-sm bg-red-100 dark:bg-red-900 rounded hover:bg-red-200 dark:hover:bg-red-800"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>

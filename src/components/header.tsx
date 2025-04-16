@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
@@ -19,13 +21,15 @@ export function Header() {
     <header className="border-b">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <h1 className="text-2xl font-bold">Bookmark Manager</h1>
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
         >
           {theme === "dark" ? "🌞" : "🌙"}
-        </button>
+        </Button>
       </div>
+      <Separator />
     </header>
   );
 }
