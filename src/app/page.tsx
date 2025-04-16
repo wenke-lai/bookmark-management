@@ -96,10 +96,51 @@ export default function Home() {
     }
   };
 
+  const handleExport = () => {
+    const htmlContent = `
+      <!DOCTYPE NETSCAPE-Bookmark-file-1>
+      <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+      <TITLE>Bookmarks</TITLE>
+      <H1>Bookmarks</H1>
+      <DL><p>
+        ${bookmarks
+          .map(
+            (bookmark) => `
+          <DT><A HREF="${bookmark.url}"${
+              bookmark.description
+                ? ` DESCRIPTION="${bookmark.description}"`
+                : ""
+            }${
+              bookmark.tags?.length ? ` TAGS="${bookmark.tags.join(",")}"` : ""
+            }>${bookmark.title}</A>
+        `
+          )
+          .join("")}
+      </DL><p>
+    `;
+
+    const blob = new Blob([htmlContent], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "bookmarks.html";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <main className="min-h-screen bg-background">
       <Header />
       <div className="container mx-auto px-4 py-8">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold">Bookmarks</h2>
+          <Button onClick={handleExport} variant="outline">
+            Export Bookmarks
+          </Button>
+        </div>
+
         <Tabs defaultValue="add" className="space-y-4">
           <TabsList>
             <TabsTrigger value="add">Add Bookmark</TabsTrigger>
