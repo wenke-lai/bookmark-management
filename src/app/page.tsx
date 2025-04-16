@@ -1,11 +1,13 @@
 "use client";
 
+import { FileUpload } from "@/components/file-upload";
 import { Header } from "@/components/header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 
@@ -69,72 +71,115 @@ export default function Home() {
     setEditingId(bookmark.id);
   };
 
+  const handleFileUpload = (content: string) => {
+    try {
+      // Parse HTML content for bookmarks
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(content, "text/html");
+      const links = doc.querySelectorAll("a");
+
+      const newBookmarks: Bookmark[] = Array.from(links).map((link) => ({
+        id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+        title: link.textContent || "Untitled",
+        url: link.href,
+        description: link.getAttribute("description") || undefined,
+        tags:
+          link
+            .getAttribute("tags")
+            ?.split(",")
+            .map((tag) => tag.trim()) || [],
+      }));
+
+      setBookmarks((prev) => [...prev, ...newBookmarks]);
+    } catch (error) {
+      console.error("Error parsing bookmarks file:", error);
+    }
+  };
+
   return (
     <main className="min-h-screen bg-background">
       <Header />
       <div className="container mx-auto px-4 py-8">
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>
-              {editingId ? "Edit Bookmark" : "Add New Bookmark"}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="title">Title</Label>
-                <Input
-                  id="title"
-                  value={formData.title}
-                  onChange={(e) =>
-                    setFormData({ ...formData, title: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="url">URL</Label>
-                <Input
-                  id="url"
-                  type="url"
-                  value={formData.url}
-                  onChange={(e) =>
-                    setFormData({ ...formData, url: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="tags">Tags (comma separated)</Label>
-                <Input
-                  id="tags"
-                  value={formData.tags?.join(", ")}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      tags: e.target.value.split(",").map((tag) => tag.trim()),
-                    })
-                  }
-                />
-              </div>
-              <Button type="submit">
-                {editingId ? "Update Bookmark" : "Add Bookmark"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+        <Tabs defaultValue="add" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="add">Add Bookmark</TabsTrigger>
+            <TabsTrigger value="import">Import</TabsTrigger>
+          </TabsList>
 
-        <div className="space-y-4">
+          <TabsContent value="add">
+            <Card>
+              <CardHeader>
+                <CardTitle>
+                  {editingId ? "Edit Bookmark" : "Add New Bookmark"}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="title">Title</Label>
+                    <Input
+                      id="title"
+                      value={formData.title}
+                      onChange={(e) =>
+                        setFormData({ ...formData, title: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="url">URL</Label>
+                    <Input
+                      id="url"
+                      type="url"
+                      value={formData.url}
+                      onChange={(e) =>
+                        setFormData({ ...formData, url: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="description">Description</Label>
+                    <Textarea
+                      id="description"
+                      value={formData.description}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          description: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="tags">Tags (comma separated)</Label>
+                    <Input
+                      id="tags"
+                      value={formData.tags?.join(", ")}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          tags: e.target.value
+                            .split(",")
+                            .map((tag) => tag.trim()),
+                        })
+                      }
+                    />
+                  </div>
+                  <Button type="submit">
+                    {editingId ? "Update Bookmark" : "Add Bookmark"}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="import">
+            <FileUpload onFileUpload={handleFileUpload} />
+          </TabsContent>
+        </Tabs>
+
+        <div className="mt-8 space-y-4">
           {bookmarks.map((bookmark) => (
             <Card key={bookmark.id}>
               <CardContent className="pt-6">
